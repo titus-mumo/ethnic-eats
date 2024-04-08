@@ -3,3 +3,4 @@ djangorestframework == 3.15.0
 django-cors-headers
 djangorestframework-simplejwt
 tweepy
+python-dotenv

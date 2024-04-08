@@ -2,15 +2,18 @@ from requests_oauthlib import OAuth1
 import tweepy
 from collections import Counter
 import requests
+from dotenv import load_dotenv
+import os
 
-consumer_key = ''
-bearer_token = 'AAAAAAAAAAAAAAAAAAAAANaHtAEAAAAAR4aphPf0I5R1%2BNCC2iwkeEfxZHs%3DYq7qxn9ozngo37NMO2zFsRs8DxO2ADQbWKXWdX9W1fBRHuB7Dt'
-access_token = '1746594715451961344-mrxxsknmZicFAWWgMkmG4RzlNebdpF'
-access_token_secret = 'MSWTVMy59Jz2W70YtmHSqfgBYtj2ajYAydgDYLzA41r5P'
-client_id = 'UEQ1LUtKYlptLUlWd2FTdTVubjA6MTpjaQ'
-client_secret = 'aFydSzhI64llpKa4Olacai5ZxwY0G5d8qL79gvc6Uc3ESzPTHB'
-api_key = 'hALGDFf3fTvZbCquI7toqmULz'
-api_secret = 'svTO0edrgEJkNTypf5VvXuN4WB8wwMl9kEb3cFZYoMdLxjGoZJ'
+load_dotenv()
+
+bearer_token = os.getenv('bearer_token')
+access_token = os.getenv('access_token')
+access_token_secret = os.getenv('access_token_secret')
+client_id = os.getenv('client_id')
+client_secret = os.getenv('client_secret')
+api_key = os.getenv('api_key')
+api_secret = os.getenv('api_secret')
 # Define Twitter API endpoints
 twitter_api_url = 'https://api.twitter.com/1.1/search/tweets.json'
 
