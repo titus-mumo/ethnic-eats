@@ -18,6 +18,7 @@ from rest_framework.parsers import JSONParser
 
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
+
 class Register(APIView):
     def post(self, request):
         data = request.data

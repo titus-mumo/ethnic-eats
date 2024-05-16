@@ -1,23 +1,11 @@
-from .serializers import UserLoginSerielizer
-from django.contrib.auth import authenticate, login
 from rest_framework import status
-from urllib import request
-from django.shortcuts import render
-from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.views import APIView
 
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets, status
-from .serializers import GroupSerializer, CuisineGetSerializer, CuisinePostSerializer, UserReviewSerielizer, UserPostPostSerielizer, UserPostGetSerializer, UserReviewPostSerielizer, MealPostSerializer, MealGetSerializer, LocationDetailPostSerializer, LocationDetailGetSerializer, CuisineBasedMenuPostSerializer
-from .models import Cuisine, UserPost, Reviews, MealModel, LocationDetail
-from rest_framework.response import Response
+from .serializers import GroupSerializer, CuisineGetSerializer, CuisinePostSerializer, MealPostSerializer, MealGetSerializer, LocationDetailPostSerializer, LocationDetailGetSerializer, CuisineBasedMenuPostSerializer
+from .models import Cuisine, MealModel, LocationDetail
 from django.http import JsonResponse
-from django.contrib.auth import authenticate, login, logout
-from rest_framework.parsers import JSONParser
-from django.contrib.auth.decorators import login_required
-
-from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -25,54 +13,8 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
-
-# Post View
-class UserPostView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        user = request.user
-        post_description = request.data.get('post_description')
-        post = {}
-        post['user'] = user.id
-        post['post_description'] = post_description
-        post_serializer = UserPostPostSerielizer(data = post)
-        if post_serializer.is_valid():
-            print("Data is serialized")
-            post = UserPost.objects.create(
-                post_description=post['post_description'], post_owner=user)
-            serializer = UserPostGetSerializer(post, many=False)
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        
-    def get(self, requet):
-        posts = UserPost.objects.all()
-        serializer = UserPostGetSerializer(posts, many = True)
-        return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe=False)
-
-#Reviews View
-class UserReviewClass(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
-    def post(self, request, cuisine_id):
-        cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
-        review_data = {
-            'cuisine': cuisine.cuisine_id,
-            'review': request.data.get('review'),
-            'name': request.data.get('name')
-        }
-        serializer = UserReviewPostSerielizer(data=review_data)
-        if serializer.is_valid():
-            saved_data = Reviews.objects.create(
-                review=review_data['review'], cuisine = cuisine)
-            serializer = UserReviewSerielizer(saved_data, many=False)
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, safe = False)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST, safe=False)
-
-    def get(self, request, cuisine_id):
-        cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
-        reviews = Reviews.objects.filter(cuisine = cuisine)
-        serializer = UserReviewSerielizer(reviews, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+def greetings(request):
+    return JsonResponse({"greetings": "Hello"})
 
 #Cuisine View
 class CuisineView(APIView):
@@ -89,13 +31,6 @@ class CuisineView(APIView):
             contact = data.get('contact')
             website = data.get('website')
             time_open = data.get('time_open')
-            # cuisine_data = {}
-            # cuisine_data['name'] = name
-            # cuisine_data['description'] = description
-            # cuisine_data['address'] = address
-            # cuisine_data['contact'] = contact
-            # cuisine_data['website'] = website
-            # cuisine_data['time_open'] = time_open
             cuisine_serializer = CuisinePostSerializer(data = data)
             if cuisine_serializer.is_valid():
                 cuisine = Cuisine.objects.create(user = user, name = name, description = description, contact = contact, address = address, website = website, time_open = time_open)

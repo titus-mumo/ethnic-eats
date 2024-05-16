@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
-from .models import Cuisine, UserPost, Reviews, MealModel, LocationDetail
+from .models import Cuisine, UserPost, Reviews, MealModel, LocationDetail, ReservationModel
 
 #User serializer
 
@@ -126,5 +126,21 @@ class LocationDetailPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = LocationDetail
         fields = ['address', 'latitude', 'longitude']
+
+
+#reservation serializers
+    #get
+class ReservationGetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReservationModel
+        fields = ['reservation_id', 'user', 'cuisine', 'total_seats', 'time']
+    
+    #post
+class ReservationPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReservationModel
+        fields = ['user', 'cuisine', 'total_seats', 'time']
+
+
 
 

@@ -4,3 +4,7 @@ django-cors-headers
 djangorestframework-simplejwt
 tweepy
 python-dotenv
+requests_oauthlib 
+matplotlib
+scikit-learn
+nltk

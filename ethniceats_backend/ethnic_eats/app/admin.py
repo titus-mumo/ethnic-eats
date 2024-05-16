@@ -33,3 +33,7 @@ class LocationDetailAdmin(admin.ModelAdmin):
 @admin.register(models.CuisinePictures)
 class LocationDetailAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.CuisinePictures._meta.fields]
+
+@admin.register(models.CommunityForumModel)
+class CommunityForumAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in models.CommunityForumModel._meta.fields]
