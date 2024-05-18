@@ -1,11 +1,16 @@
-from rest_framework import status
+#normal imports
+from rest_framework import status, permissions
 from rest_framework.views import APIView
-
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets, status
 from .serializers import GroupSerializer, CuisineGetSerializer, CuisinePostSerializer, MealPostSerializer, MealGetSerializer, LocationDetailPostSerializer, LocationDetailGetSerializer, CuisineBasedMenuPostSerializer
 from .models import Cuisine, MealModel, LocationDetail
 from django.http import JsonResponse
+
+#ML imports
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -18,7 +23,7 @@ def greetings(request):
 
 #Cuisine View
 class CuisineView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         user = request.user
@@ -49,7 +54,7 @@ class CuisineView(APIView):
 #Meals View
 
 class MealView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         data = request.data
@@ -77,7 +82,7 @@ class MealView(APIView):
 
 #Location View Detail
 class LocationDetailView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         data = request.data
@@ -102,7 +107,7 @@ class LocationDetailView(APIView):
         
 # Menus related to a specific Restaurants
 class CuisineBasedMenuView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, cuisine_id):
         try:
@@ -139,6 +144,8 @@ class CuisineBasedMenuView(APIView):
     
 
 class GetSpecificCuisineView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
     def get(self, request, cuisine_id):
         try:
             cuisine = Cuisine.objects.filter(cuisine_id=cuisine_id).first()

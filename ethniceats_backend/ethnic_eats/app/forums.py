@@ -1,11 +1,11 @@
 from .models import CommunityForumModel
 from django.http import JsonResponse
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 
 class CommunityForum(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     #Join a commnunity forum
     def post(self, request, communityforum_id):

@@ -2,14 +2,14 @@ from .models import Cuisine, Reviews
 from rest_framework.views import APIView
 from .serializers import UserReviewPostSerielizer,UserReviewSerielizer
 from django.http import JsonResponse
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from nltk.sentiment import SentimentIntensityAnalyzer
 
 
 #Reviews View
 class UserReviewClass(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     def post(self, request, cuisine_id):
         cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
         review_data = {

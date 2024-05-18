@@ -37,3 +37,7 @@ class LocationDetailAdmin(admin.ModelAdmin):
 @admin.register(models.CommunityForumModel)
 class CommunityForumAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.CommunityForumModel._meta.fields]
+
+@admin.register(models.ReservationModel)
+class ReservationModelAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in models.ReservationModel._meta.fields]

@@ -24,7 +24,7 @@ urlpatterns = [
     path("cuisines/<int:cuisine_id>/", views.GetSpecificCuisineView.as_view(), name = 'cuisine'),
     path("reservation/user/", reservations.ReservationViewForUser.as_view(), name='reservationforuser'),
     path("reservation/cuisine/<int:cuisine_id>/", reservations.ReservationViewForCuisine.as_view(), name="rservationforcuisine"),
-    path("reservation/delete/<int: reservation_id>/", reservations.DeleteReservationView.as_view(), name="deletereservation"),
+    path("reservation/delete/<int:reservation_id>/", reservations.DeleteReservationView.as_view(), name="deletereservation"),
     path("", views.greetings, name='gretings')
 ]
 

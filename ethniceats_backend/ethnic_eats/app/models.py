@@ -91,7 +91,7 @@ class ReservationModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
     total_seats = models.CharField(max_length=20)
-    time = models.TimeField()
+    time = models.DateTimeField()
 
     def __str__(self):
         return f"{self.user} made a reservation on {self.cuisine}"

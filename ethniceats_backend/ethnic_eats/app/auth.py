@@ -1,22 +1,17 @@
 from .serializers import UserLoginSerielizer
 from django.contrib.auth import authenticate, login
 from rest_framework import status
-from urllib import request
-from django.shortcuts import render
-from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.views import APIView
 
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets, status
 from .serializers import GroupSerializer, UserLoginSerielizer, CreateNewUserSerializer, ChangePassWordSerializer
-from .models import Cuisine, UserPost
-from rest_framework.response import Response
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.parsers import JSONParser
 
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+
+from django.core.mail import send_mail
 
 
 class Register(APIView):
@@ -37,18 +32,24 @@ class Register(APIView):
         serialized_user_data = CreateNewUserSerializer(data = user_data, many = False)
         if serialized_user_data.is_valid():
             user = User.objects.create_user(username=username, email=email, password=password)
-            return JsonResponse({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
+            # subject = "Account creation successful"
+            # message = "You have successfully crreated an acount with Ethnic Eats"
+            # sender_email = "tituskennedy74@gmail.com"
+            # recipient_list = [user.email]
+            # send_mail(subject, message, sender_email, recipient_list
+            #           )
+            return JsonResponse({'message': 'Accont created successfully successfully'}, status=status.HTTP_201_CREATED)
         return JsonResponse(serialized_user_data.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
     def post(self, request):
         data = request.data
+        print(data)
         serializer = UserLoginSerielizer(data=data)
         if serializer.is_valid():
             username = data.get('username')
             password = data.get('password')
             user = authenticate(request, username=username, password=password)
-            print(user)
             if user is not None:
                 login(request, user)
                 refresh = RefreshToken.for_user(user)
@@ -67,7 +68,7 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         try:

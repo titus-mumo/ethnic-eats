@@ -2,23 +2,23 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import Group, User
 from .models import Cuisine, ReservationModel
 from django.http import JsonResponse
-from rest_framework import status
+from rest_framework import status, permissions
 from .serializers import ReservationPostSerializer, ReservationGetSerializer
 
 
 class ReservationViewForUser(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
         user = request.user
         if User.objects.filter(id = user.id).exists():
             data = request.data
             data['user'] = user.id
-            cuisine = Cuisine.objects.filter(cuisine_id = data.get('cuisine')).exists()
+            cuisine = Cuisine.objects.filter(cuisine_id = data.get('cuisine')).first()
             if not cuisine:
                 return JsonResponse({"message": " Restaurant not found"}, status = status.HTTP_404_NOT_FOUND)
             serializer = ReservationPostSerializer(data = data)
             if serializer.is_valid():
-                reservation = ReservationModel.objects.create(data = data, many = False)
+                reservation = ReservationModel.objects.create(user = user, cuisine = cuisine, total_seats  = data.get('total_seats'), time = data.get('time'))
                 serialized_reservation = ReservationGetSerializer(reservation, many = False)
                 return JsonResponse(serialized_reservation.data, status = status.HTTP_201_CREATED)
             else:
@@ -33,6 +33,7 @@ class ReservationViewForUser(APIView):
         return JsonResponse(serialized_reservations.data, status = status.HTTP_200_OK, safe=False)
     
 class ReservationViewForCuisine(APIView):
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, requet, cuisine_id):
         try:
             cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
@@ -48,6 +49,7 @@ class ReservationViewForCuisine(APIView):
             return JsonResponse({"message" : "Reservations specific for this cuisine not found"})
         
 class DeleteReservationView(APIView):
+        permission_classes = [permissions.IsAuthenticated]
         def delete(self, request, reservation_id):
             user = request.user
             try:

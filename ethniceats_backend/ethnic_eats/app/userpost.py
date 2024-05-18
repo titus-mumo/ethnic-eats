@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from .serializers import UserPostGetSerializer, UserPostPostSerielizer
 from .models import UserPost
 from django.http import JsonResponse
-from rest_framework import status
+from rest_framework import status, permissions
 
 
 
@@ -10,7 +10,7 @@ from rest_framework import status
 
 # user post
 class UserPostView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         user = request.user
