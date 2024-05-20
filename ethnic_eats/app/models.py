@@ -9,7 +9,7 @@ class Cuisine(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     name = models.CharField(max_length = 70, unique = True)
     description = models.CharField(max_length = 400)
-    contact = models.CharField(max_length = 500, unique=True)
+    contact = models.CharField(max_length = 500)
     address = models.CharField(max_length = 100)
     website = models.CharField(max_length = 100)
     time_open = models.CharField(max_length = 100)

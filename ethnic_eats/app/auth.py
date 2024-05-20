@@ -3,9 +3,9 @@ from django.contrib.auth import authenticate, login
 from rest_framework import status
 from rest_framework.views import APIView
 
-from django.contrib.auth.models import Group, User
+
 from rest_framework import permissions, viewsets, status
-from .serializers import GroupSerializer, UserLoginSerielizer, CreateNewUserSerializer, ChangePassWordSerializer
+from .serializers import GroupSerializer, UserInfoSerializer, UserLoginSerielizer, CreateNewUserSerializer, ChangePassWordSerializer
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 
@@ -13,10 +13,12 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 from django.core.mail import send_mail
 
+from django.contrib.auth.models import Group, User
 
 class Register(APIView):
     def post(self, request):
         data = request.data
+        role = data.get('role')
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
@@ -32,13 +34,18 @@ class Register(APIView):
         serialized_user_data = CreateNewUserSerializer(data = user_data, many = False)
         if serialized_user_data.is_valid():
             user = User.objects.create_user(username=username, email=email, password=password)
+            if role == "Cuisine Owner":
+                cuisine_owner_group, created = Group.objects.get_or_create(name='Cuisine Owner')
+                user.groups.add(cuisine_owner_group)
             # subject = "Account creation successful"
             # message = "You have successfully crreated an acount with Ethnic Eats"
             # sender_email = "tituskennedy74@gmail.com"
             # recipient_list = [user.email]
             # send_mail(subject, message, sender_email, recipient_list
             #           )
-            return JsonResponse({'message': 'Accont created successfully successfully'}, status=status.HTTP_201_CREATED)
+            user_data = User.objects.filter(email = email).first()
+            user_info_serializer = UserInfoSerializer(user_data)
+            return JsonResponse(data = user_info_serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(serialized_user_data.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
@@ -71,16 +78,17 @@ class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
+        print(request.data)
         try:
             refresh_token = request.data.get("refresh_token")
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return JsonResponse(status=status.HTTP_205_RESET_CONTENT)
+            return JsonResponse({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
-            return JsonResponse(status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({"error": "Bad Request"}, status=status.HTTP_400_BAD_REQUEST)
         
 class ChangePasswordView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         user = request.user
@@ -101,10 +109,22 @@ class ChangePasswordView(APIView):
             if serialized_data.is_valid():
                 user.set_password(new_password)
                 user.save()
-                return JsonResponse({"message": "Password changed successfully"}, status = status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({"message": "Password changed successfully"}, status = status.HTTP_200_OK)
             return JsonResponse(serialized_data.errors, status = status.HTTP_400_BAD_REQUEST)
         return JsonResponse({"message": "Unauthorized Request"}, status = status.HTTP_401_UNAUTHORIZED)
 
+
+class UserInfoView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        user_info = User.objects.filter(id = user.id).first()
+        if user_info:
+            user_serializer = UserInfoSerializer(user_info)
+            return JsonResponse(data = user_serializer.data, status = status.HTTP_200_OK)
+        else:
+            return JsonResponse({"error": "Bad Request"}, status = status.HTTP_400_BAD_REQUEST)
 
 
 

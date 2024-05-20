@@ -58,8 +58,7 @@ class MealView(APIView):
 
     def post(self, request):
         data = request.data
-        cuisine = Cuisine.objects.filter(name = data.get('cuisine_name')).first()
-        cuisine = cuisine.cuisine_id
+        cuisine = Cuisine.objects.filter(cuisine_id = data.get('cuisine_id')).first()
         meal_name = data.get('meal_name')
         price = data.get('price')
         category = data.get('category')
@@ -145,7 +144,7 @@ class CuisineBasedMenuView(APIView):
 
 class GetSpecificCuisineView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get(self, request, cuisine_id):
         try:
             cuisine = Cuisine.objects.filter(cuisine_id=cuisine_id).first()
@@ -156,5 +155,12 @@ class GetSpecificCuisineView(APIView):
         serialized_data = CuisineGetSerializer(cuisine)
         return JsonResponse(serialized_data.data, status = status.HTTP_200_OK, safe = False)
         
-         
+class CuisineOwnerView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        cuisines = Cuisine.objects.filter(user = user)
+        serialized_cuisines = CuisineGetSerializer(cuisines, many = True)
+        return JsonResponse(data = serialized_cuisines.data, status = status.HTTP_200_OK, safe = False)
+
 

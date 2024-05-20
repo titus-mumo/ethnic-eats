@@ -12,6 +12,7 @@ class ReservationViewForUser(APIView):
         user = request.user
         if User.objects.filter(id = user.id).exists():
             data = request.data
+            print(data)
             data['user'] = user.id
             cuisine = Cuisine.objects.filter(cuisine_id = data.get('cuisine')).first()
             if not cuisine:
@@ -34,7 +35,7 @@ class ReservationViewForUser(APIView):
     
 class ReservationViewForCuisine(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    def get(self, requet, cuisine_id):
+    def get(self, request, cuisine_id):
         try:
             cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
             if not cuisine:
@@ -55,7 +56,7 @@ class DeleteReservationView(APIView):
             try:
                 reservation = ReservationModel.objects.get(user=user, reservation_id=reservation_id)
                 reservation.delete()
-                return JsonResponse({"message": "Reservation deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+                return JsonResponse({"message": "Reservation deleted successfully."}, status=status.HTTP_200_OK)
             except ReservationModel.DoesNotExist:
                 return JsonResponse({"error": "Reservation not found."}, status=status.HTTP_404_NOT_FOUND)
                

@@ -10,6 +10,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id']
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 #User Serializers
     #register user serializer
 class CreateNewUserSerializer(serializers.HyperlinkedModelSerializer):
