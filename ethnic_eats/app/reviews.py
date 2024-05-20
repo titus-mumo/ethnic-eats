@@ -4,7 +4,7 @@ from .serializers import UserReviewPostSerielizer,UserReviewSerielizer
 from django.http import JsonResponse
 from rest_framework import status, permissions
 from rest_framework.response import Response
-from nltk.sentiment import SentimentIntensityAnalyzer
+# from nltk.sentiment import SentimentIntensityAnalyzer
 
 
 #Reviews View
@@ -31,10 +31,10 @@ class UserReviewClass(APIView):
         serializer = UserReviewSerielizer(reviews, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-review_model = SentimentIntensityAnalyzer()
+# review_model = SentimentIntensityAnalyzer()
 
-def classify_review(review):
-    sentiment_scores = review_model.polarity_scores(review)
-    compound_score = sentiment_scores('compound')
-    return compound_score
+# def classify_review(review):
+#     sentiment_scores = review_model.polarity_scores(review)
+#     compound_score = sentiment_scores('compound')
+#     return compound_score
     
