@@ -4,7 +4,7 @@ from django.urls import path
 
 from . import views
 from . import auth
-from . import userpost, reviews, reservations
+from . import userpost, reviews, reservations, forums
 
 
 urlpatterns = [
@@ -27,7 +27,10 @@ urlpatterns = [
     path("reservation/user/", reservations.ReservationViewForUser.as_view(), name='reservationforuser'),
     path("reservation/cuisine/<int:cuisine_id>/", reservations.ReservationViewForCuisine.as_view(), name="rservationforcuisine"),
     path("reservation/delete/<int:reservation_id>/", reservations.DeleteReservationView.as_view(), name="deletereservation"),
-    path("", views.greetings, name='gretings')
+    path("", views.greetings, name='gretings'),
+
+    #Comunity forums
+    # path("forums/all", forums.AllCommunityForums.as_view(), name="all forums")
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

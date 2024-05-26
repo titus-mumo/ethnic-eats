@@ -21,22 +21,22 @@ class LocationDetailAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.MealModel)
-class LocationDetailAdmin(admin.ModelAdmin):
+class MealModelAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.MealModel._meta.fields]
 
 
 @admin.register(models.PostPicture)
-class LocationDetailAdmin(admin.ModelAdmin):
+class PostPictureAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.PostPicture._meta.fields]
 
 
 @admin.register(models.CuisinePictures)
-class LocationDetailAdmin(admin.ModelAdmin):
+class CuisinePicturesAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.CuisinePictures._meta.fields]
 
-@admin.register(models.CommunityForumModel)
-class CommunityForumAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in models.CommunityForumModel._meta.fields]
+# @admin.register(models.CommunityForumModel)
+# class CommunityForumAdmin(admin.ModelAdmin):
+#     list_display = [field.name for field in models.CommunityForumModel._meta.fields]
 
 @admin.register(models.ReservationModel)
 class ReservationModelAdmin(admin.ModelAdmin):

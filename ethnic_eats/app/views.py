@@ -29,7 +29,6 @@ class CuisineView(APIView):
         user = request.user
         if User.objects.filter(id=user.id).exists():
             data = request.data
-            print('data')
             name = data.get('name')
             description = data.get('description')
             address = data.get('address')

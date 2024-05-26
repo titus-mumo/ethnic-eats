@@ -15,7 +15,6 @@ class UserReviewClass(APIView):
         review_data = {
             'cuisine': cuisine.cuisine_id,
             'review': request.data.get('review'),
-            'name': request.data.get('name')
         }
         serializer = UserReviewPostSerielizer(data=review_data)
         if serializer.is_valid():

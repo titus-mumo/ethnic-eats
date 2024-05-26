@@ -20,7 +20,6 @@ class UserPostView(APIView):
         post['post_description'] = post_description
         post_serializer = UserPostPostSerielizer(data = post)
         if post_serializer.is_valid():
-            print("Data is serialized")
             post = UserPost.objects.create(
                 post_description=post['post_description'], post_owner=user)
             serializer = UserPostGetSerializer(post, many=False)

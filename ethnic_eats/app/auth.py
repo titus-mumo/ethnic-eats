@@ -51,7 +51,6 @@ class Register(APIView):
 class LoginView(APIView):
     def post(self, request):
         data = request.data
-        print(data)
         serializer = UserLoginSerielizer(data=data)
         if serializer.is_valid():
             username = data.get('username')
@@ -78,7 +77,6 @@ class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        print(request.data)
         try:
             refresh_token = request.data.get("refresh_token")
             token = RefreshToken(refresh_token)

@@ -9,4 +9,7 @@ python-dotenv
 requests_oauthlib 
 matplotlib
 scikit-learn
+channels
+channels-redis
+daphne
 # nltk

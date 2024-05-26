@@ -30,7 +30,6 @@ class Reviews(models.Model):
     review_id = models.AutoField(unique=True, primary_key=True)
     created = models.DateTimeField(auto_now_add=True)
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
-    name = models.CharField(max_length = 20)
     review = models.CharField(max_length=300)
 
     def __str__(self):
@@ -73,15 +72,15 @@ class LocationDetail(models.Model):
     longitude = models.CharField(max_length = 50)
 
 
-#community forum
-class  CommunityForumModel(models.Model):
-    communityforum_id = models.AutoField(unique=True, primary_key=True)
-    title = models.CharField(max_length = 100)
-    description = models.CharField(max_length=300)
-    members = models.ManyToManyField(User)
+# #community forum
+# class  CommunityForumModel(models.Model):
+#     communityforum_id = models.AutoField(unique=True, primary_key=True)
+#     title = models.CharField(max_length = 100)
+#     description = models.CharField(max_length=300)
+#     members = models.ManyToManyField(User, blank=True)
 
-    def __str__(self):
-        return f"This is {self.title}"
+#     def __str__(self):
+#         return f"This is {self.title}"
 
 
 #Reservations

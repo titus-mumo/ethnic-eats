@@ -12,7 +12,6 @@ class ReservationViewForUser(APIView):
         user = request.user
         if User.objects.filter(id = user.id).exists():
             data = request.data
-            print(data)
             data['user'] = user.id
             cuisine = Cuisine.objects.filter(cuisine_id = data.get('cuisine')).first()
             if not cuisine:

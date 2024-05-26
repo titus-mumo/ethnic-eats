@@ -69,13 +69,12 @@ class UserPostPostSerielizer(serializers.Serializer):
 class UserReviewPostSerielizer(serializers.Serializer):
     review = serializers.CharField(required = True)
     cuisine = serializers.IntegerField(read_only = True)
-    name = serializers.CharField(required = False)
 
     #get
 class UserReviewSerielizer(serializers.ModelSerializer):
     class Meta:
         model = Reviews
-        fields = ['review_id', 'created', 'cuisine', 'name', 'review']
+        fields = ['review_id', 'created', 'cuisine', 'review']
 
 
 #Cuisine Serializer
@@ -145,6 +144,13 @@ class ReservationPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReservationModel
         fields = ['user', 'cuisine', 'total_seats', 'time']
+
+
+# from .models import CommunityForumModel
+# class GetForumSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CommunityForumModel
+#         fields = '__all__'
 
 
 
