@@ -1,11 +1,24 @@
 from rest_framework import generics
-from .models import ChatMessage
-from .serializers import ChatMessageSerializer
+from .models import ChatRoom, ChatMessage
+from .serializers import ChatRoomSerializer, ChatMessageSerializer
+
+class ChatRoomListCreate(generics.ListCreateAPIView):
+    queryset = ChatRoom.objects.all()
+    serializer_class = ChatRoomSerializer
+
+class ChatRoomDetail(generics.RetrieveAPIView):
+    queryset = ChatRoom.objects.all()
+    serializer_class = ChatRoomSerializer
 
 class ChatMessageListCreate(generics.ListCreateAPIView):
-    queryset = ChatMessage.objects.all()
     serializer_class = ChatMessageSerializer
 
     def get_queryset(self):
-        room_name = self.kwargs['room_name']
-        return ChatMessage.objects.filter(room_name=room_name).order_by('-timestamp')
+        room_name = self.kwargs['room']
+        return ChatMessage.objects.filter(room=room_name).order_by('-timestamp')
+
+    def perform_create(self, serializer):
+        print(self)
+        room_name = self.kwargs['room']
+        room = ChatRoom.objects.get(room=room_name)
+        serializer.save(room=room)

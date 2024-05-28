@@ -15,41 +15,105 @@ client_secret = os.getenv('client_secret')
 api_key = os.getenv('api_key')
 api_secret = os.getenv('api_secret')
 
-# Define Twitter API endpoint
-twitter_api_url = 'https://api.twitter.com/1.1/search/tweets.json'
+import requests
 
-# List of ethnic cuisines to track
-ethnic_cuisines = ['Chinese', 'Mexican', 'Indian', 'Italian', 'Japanese', 'Thai']
+# Your bearer token
+BEARER_TOKEN = bearer_token
 
-# Counter to store trending cuisines
-trending_cuisines = Counter()
+# The search query
+query = 'justTitusk'
 
-try:
-    # Create OAuth1 session
-    auth = OAuth1(client_id, client_secret, access_token, access_token_secret)
+# The Twitter API v2 endpoint for recent search
+      
+url = f'https://api.twitter.com/2/users/me'
 
-    # Fetch tweets mentioning ethnic cuisines
-    for cuisine in ethnic_cuisines:
-        # Make request to Twitter API
-        response = requests.get(twitter_api_url, auth=auth, params={'q': cuisine, 'count': 100})
-
-        # Check if request was successful
-        if response.status_code == 200:
-            # Extract tweets from response
-            tweets = response.json().get('statuses', [])
-
-            # Count mentions of cuisine
-            trending_cuisines[cuisine] += len(tweets)
-        else:
-            print(f"Error fetching tweets for {cuisine}: {response.text}")
-
-    # Identify trending cuisines
-    trending_cuisines = trending_cuisines.most_common()
     
-    # Print the results
-    print("Trending Ethnic Cuisines:")
-    for cuisine, count in trending_cuisines:
-        print(f"{cuisine}: {count} mentions")
 
-except Exception as e:
-    print(f"An error occurred: {e}")
+# The headers for the request
+headers = {
+    'Authorization': f'Bearer {BEARER_TOKEN}'
+}
+
+# Make the GET request
+response = requests.get(url, headers=headers)
+
+# Check for errors
+if response.status_code != 200:
+    raise Exception(f"Request returned an error: {response.status_code} {response.text}")
+
+# Print the response
+tweets = response.json()
+for tweet in tweets['data']:
+    print(tweet['text'])
+
+
+
+
+      
+# import requests
+# from requests_oauthlib import OAuth1
+# import time
+# import random
+# import hashlib
+# import hmac
+# import base64
+
+# # Your credentials
+# CONSUMER_API_KEY = api_key
+# CONSUMER_API_SECRET_KEY = api_secret
+# ACCESS_TOKEN = access_token
+# ACCESS_TOKEN_SECRET = access_token_secret
+
+# # Generate OAuth nonce
+# def generate_nonce(length=8):
+#     return ''.join([str(random.randint(0, 9)) for i in range(length)])
+
+# # Generate OAuth timestamp
+# def generate_timestamp():
+#     return str(int(time.time()))
+
+# # Generate OAuth signature
+# def generate_signature(method, url, params, consumer_secret, token_secret):
+#     sorted_params = '&'.join(['{}={}'.format(k, v) for k, v in sorted(params.items())])
+#     base_string = '&'.join([method.upper(), requests.utils.quote(url, safe=''), requests.utils.quote(sorted_params, safe='')])
+    
+#     signing_key = '&'.join([consumer_secret, token_secret])
+    
+#     hashed = hmac.new(signing_key.encode('utf-8'), base_string.encode('utf-8'), hashlib.sha1)
+#     signature = base64.b64encode(hashed.digest()).decode('utf-8')
+#     return signature
+
+# # Prepare the parameters
+# url = 'https://api.twitter.com/1.1/statuses/update.json'
+# status = 'Hello world'
+# method = 'POST'
+
+# oauth_params = {
+#     'oauth_consumer_key': CONSUMER_API_KEY,
+#     'oauth_nonce': generate_nonce(),
+#     'oauth_signature_method': 'HMAC-SHA1',
+#     'oauth_timestamp': generate_timestamp(),
+#     'oauth_token': ACCESS_TOKEN,
+#     'oauth_version': '1.0',
+#     'status': status,
+# }
+
+# # Generate OAuth signature
+# oauth_params['oauth_signature'] = generate_signature(method, url, oauth_params, CONSUMER_API_SECRET_KEY, ACCESS_TOKEN_SECRET)
+
+# # Create OAuth1 object
+# auth = OAuth1(
+#     CONSUMER_API_KEY,
+#     client_secret=CONSUMER_API_SECRET_KEY,
+#     resource_owner_key=ACCESS_TOKEN,
+#     resource_owner_secret=ACCESS_TOKEN_SECRET,
+#     signature_type='query'
+# )
+
+# # Make the POST request
+# response = requests.post(url, params={'status': status}, auth=auth)
+
+# # Print the response
+# print(response.status_code)
+# print(response.json())
+ 

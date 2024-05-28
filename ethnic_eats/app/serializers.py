@@ -69,12 +69,13 @@ class UserPostPostSerielizer(serializers.Serializer):
 class UserReviewPostSerielizer(serializers.Serializer):
     review = serializers.CharField(required = True)
     cuisine = serializers.IntegerField(read_only = True)
+    score = serializers.FloatField(required = True)
 
     #get
 class UserReviewSerielizer(serializers.ModelSerializer):
     class Meta:
         model = Reviews
-        fields = ['review_id', 'created', 'cuisine', 'review']
+        fields = ['review_id', 'created', 'cuisine', 'review', 'score']
 
 
 #Cuisine Serializer

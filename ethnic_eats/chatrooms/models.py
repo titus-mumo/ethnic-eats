@@ -2,6 +2,15 @@ from django.db import models
 
 # Create your models here.
 class ChatMessage(models.Model):
-    room_name = models.CharField(max_length=255)
+    room = models.CharField(max_length=255)
     message = models.TextField()
+    user = models.TextField(default='anonymous')
     timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class ChatRoom(models.Model):
+    room = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.room

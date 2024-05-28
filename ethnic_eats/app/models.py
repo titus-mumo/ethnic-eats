@@ -31,6 +31,7 @@ class Reviews(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
     review = models.CharField(max_length=300)
+    score = models.FloatField(default=0.5)
 
     def __str__(self):
         return self.review

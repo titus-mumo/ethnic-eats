@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+import dj_database_url
+import os
+
+DATABASE_URL = 'postgres://ethnic_eats_database_user:MVxh6v2pBVB0dMcJfCOuophoigA386Kf@dpg-cp5s58acn0vc73bkhujg-a.oregon-postgres.render.com/ethnic_eats_database'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +30,7 @@ SECRET_KEY = 'django-insecure-p)oxi^y5=#ji0gjfc@$2o_6(#$2+vo(am$p&z1%xpg@l1(jd6-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://localhost:3000/', '127.0.0.1', 'ethnic-eats.onrender.com']
+ALLOWED_HOSTS = ['http://localhost:3000/', '127.0.0.1', 'ethnic-eats.onrender.com', 'localhost', 'websocketking.com', 'https://ethnic-eats.onrender.com']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -83,11 +87,19 @@ WSGI_APPLICATION = 'ethnic_eats.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
+
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+	"default": dj_database_url.parse(DATABASE_URL)
 }
 
 
