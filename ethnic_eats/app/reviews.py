@@ -10,12 +10,12 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 #Reviews View
 class UserReviewClass(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    def post(self, request, cuisine_id):
+    async def post(self, request, cuisine_id):
         cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
         review_data = {
             'cuisine': cuisine.cuisine_id,
             'review': request.data.get('review'),
-            'score' : classify_review(str(request.data.get('review')))
+            'score' : await classify_review(str(request.data.get('review')))
         }
 
         serializer = UserReviewPostSerielizer(data=review_data)
@@ -27,7 +27,7 @@ class UserReviewClass(APIView):
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED, safe = False)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST, safe=False)
 
-    def get(self, request, cuisine_id):
+    async def get(self, request, cuisine_id):
         cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
         reviews = Reviews.objects.filter(cuisine = cuisine)
         serializer = UserReviewSerielizer(reviews, many=True)
