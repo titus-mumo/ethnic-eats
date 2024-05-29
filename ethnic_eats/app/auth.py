@@ -37,12 +37,12 @@ class Register(APIView):
             if role == "Cuisine Owner":
                 cuisine_owner_group, created = Group.objects.get_or_create(name='Cuisine Owner')
                 user.groups.add(cuisine_owner_group)
-            # subject = "Account creation successful"
-            # message = "You have successfully crreated an acount with Ethnic Eats"
-            # sender_email = "tituskennedy74@gmail.com"
-            # recipient_list = [user.email]
-            # send_mail(subject, message, sender_email, recipient_list
-            #           )
+            subject = "Account creation successful"
+            message = "You have successfully crreated an acount with Ethnic Eats"
+            sender_email = "tituskennedy74@gmail.com"
+            recipient_list = [user.email]
+            send_mail(subject, message, sender_email, recipient_list, fail_silently=False,
+                      )
             user_data = User.objects.filter(email = email).first()
             user_info_serializer = UserInfoSerializer(user_data)
             return JsonResponse(data = user_info_serializer.data, status=status.HTTP_201_CREATED)

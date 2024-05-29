@@ -97,3 +97,9 @@ class ReservationModel(models.Model):
         return f"{self.user} made a reservation on {self.cuisine}"
 
 
+class Inquires(models.Model):
+    inquiry_id = models.AutoField(unique=True, primary_key=True)
+    name = models.CharField(max_length=50)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.CharField(max_length=1000)
