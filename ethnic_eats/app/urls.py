@@ -6,6 +6,7 @@ from . import views
 from . import auth
 from . import userpost, reviews, reservations, forums
 from . import inquiries
+from . import resetpassword
 
 
 urlpatterns = [
@@ -21,6 +22,7 @@ urlpatterns = [
     path('userpost/', userpost.UserPostView.as_view(), name='userpost'),
     path('reviews/<int:cuisine_id>/',
          reviews.UserReviewClass.as_view(), name='review'),
+    path('reviews/', reviews.GetAllReviews.as_view(), name='all reviews'),
     path('meals/', views.MealView.as_view(), name='meals'),
     path('location/', views.LocationDetailView.as_view(), name='location'),
     path("cuisines/<int:cuisine_id>/menu/", views.CuisineBasedMenuView.as_view(), name  = 'restaurant menu'),
@@ -30,6 +32,7 @@ urlpatterns = [
     path("reservation/delete/<int:reservation_id>/", reservations.DeleteReservationView.as_view(), name="deletereservation"),
     path("", views.greetings, name='gretings'),
     path('talk_to_us/', inquiries.InquiryView.as_view(), name = "talk to us"),
+    path('reset-request/', resetpassword.PasswordResetRequestView.as_view(), name='reset_request'),
 
     #Comunity forums
     # path("forums/all", forums.AllCommunityForums.as_view(), name="all forums")

@@ -33,7 +33,7 @@ class UserReviewClass(APIView):
         cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
         reviews = Reviews.objects.filter(cuisine = cuisine)
         serializer = UserReviewSerielizer(reviews, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe=False)
     
 review_model = SentimentIntensityAnalyzer()
 
@@ -42,4 +42,13 @@ def classify_review(review):
     sentiment_scores = review_model.polarity_scores(review)
     compound_score = sentiment_scores['compound']
     return compound_score
+
+
+class GetAllReviews(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        reviews = Reviews.objects.all()
+        serialised_reviews = UserReviewSerielizer(reviews, many = True)
+        return JsonResponse(serialised_reviews.data, status = status.HTTP_200_OK, safe=False)
     

@@ -41,7 +41,7 @@ response = requests.get(url, headers=headers)
 if response.status_code != 200:
     raise Exception(f"Request returned an error: {response.status_code} {response.text}")
 
-# Print the response
+# print(the response
 tweets = response.json()
 for tweet in tweets['data']:
     print(tweet['text'])
@@ -113,7 +113,7 @@ for tweet in tweets['data']:
 # # Make the POST request
 # response = requests.post(url, params={'status': status}, auth=auth)
 
-# # Print the response
+# # print(the response
 # print(response.status_code)
 # print(response.json())
  
