@@ -29,15 +29,6 @@ class MealModelAdmin(admin.ModelAdmin):
 class PostPictureAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.PostPicture._meta.fields]
 
-
-@admin.register(models.CuisinePictures)
-class CuisinePicturesAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in models.CuisinePictures._meta.fields]
-
-# @admin.register(models.CommunityForumModel)
-# class CommunityForumAdmin(admin.ModelAdmin):
-#     list_display = [field.name for field in models.CommunityForumModel._meta.fields]
-
 @admin.register(models.ReservationModel)
 class ReservationModelAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.ReservationModel._meta.fields]

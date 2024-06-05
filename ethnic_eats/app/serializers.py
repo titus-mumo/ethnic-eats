@@ -86,19 +86,23 @@ class CuisineGetSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField()
     name = serializers.CharField(required = True)
     description = serializers.CharField(required = True)
+    location = serializers.CharField(required = True)
     contact = serializers.CharField(required = True)
     contact = serializers.CharField(required=True)
     website = serializers.CharField(required = True)
     time_open = serializers.CharField(required = True)
+    cuisine_pic = serializers.FileField(required = True)
 
         #post
 class CuisinePostSerializer(serializers.Serializer):
     name = serializers.CharField(required = True)
     description = serializers.CharField(required = True)
+    location = serializers.CharField(required = True)
     address = serializers.CharField(required = True)
     contact = serializers.CharField(required = True)
     website = serializers.CharField(required = True)
     time_open = serializers.CharField(required = True)
+    cuisine_pic = serializers.FileField(required = True)
 
 
 #meal serializers
@@ -106,12 +110,12 @@ class CuisinePostSerializer(serializers.Serializer):
 class MealGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = MealModel
-        fields = ['meal_id', 'cuisine_id', 'meal_name', 'price', 'category']
+        fields = '__all__'
     #post
 class MealPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = MealModel
-        fields = ['cuisine_id', 'meal_name', 'price', 'category']
+        fields = '__all__'
 
     #cuisine_based menu serializer
 class CuisineBasedMenuPostSerializer(serializers.ModelSerializer):

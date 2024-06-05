@@ -6,6 +6,7 @@ from rest_framework import permissions, viewsets, status
 from .serializers import GroupSerializer, CuisineGetSerializer, CuisinePostSerializer, MealPostSerializer, MealGetSerializer, LocationDetailPostSerializer, LocationDetailGetSerializer, CuisineBasedMenuPostSerializer
 from .models import Cuisine, MealModel, LocationDetail
 from django.http import JsonResponse
+import json
 
 #ML imports
 from sklearn.metrics import accuracy_score
@@ -29,15 +30,39 @@ class CuisineView(APIView):
         user = request.user
         if User.objects.filter(id=user.id).exists():
             data = request.data
+            print(data)
             name = data.get('name')
             description = data.get('description')
+            location = data.get('location')
             address = data.get('address')
             contact = data.get('contact')
             website = data.get('website')
             time_open = data.get('time_open')
-            cuisine_serializer = CuisinePostSerializer(data = data)
+            cuisine_pic = data.get('cuisine_pic' )
+
+            location_geometry = data.get('location_geometry')
+            latitude = location_geometry['latitude']
+            print(latitude)
+            longitude = location_geometry['longitude']
+
+            cuisine_data = dict()
+
+            cuisine_data['name'] = name
+            cuisine_data['description'] = description
+            cuisine_data['location'] = location
+            cuisine_data['address'] = address
+            cuisine_data['contact'] = contact
+            cuisine_data['website'] = website
+            cuisine_data['time_open'] = time_open
+            cuisine_data['cuisine_pic'] = cuisine_pic
+
+            print(cuisine_data)
+
+            
+            cuisine_serializer = CuisinePostSerializer(data = cuisine_data)
             if cuisine_serializer.is_valid():
-                cuisine = Cuisine.objects.create(user = user, name = name, description = description, contact = contact, address = address, website = website, time_open = time_open)
+                cuisine = Cuisine.objects.create(user = user, name = name, description = description, location=location,  contact = contact, address = address, website = website, time_open = time_open, cuisine_pic = cuisine_pic)
+                location = LocationDetail.objects.create(cuisine = cuisine, address=name, latitude= latitude, longitude=longitude)
                 serialized_cuisine = CuisineGetSerializer(cuisine, many=False)
                 return JsonResponse(serialized_cuisine.data, status = status.HTTP_201_CREATED, safe = False)
             return JsonResponse(cuisine_serializer.errors, status=status.HTTP_400_BAD_REQUEST, safe=False)
@@ -61,14 +86,17 @@ class MealView(APIView):
         meal_name = data.get('meal_name')
         price = data.get('price')
         category = data.get('category')
+        meal_pic = data.get('meal_pic')
         meal_data = {}
-        meal_data['cuisine'] = cuisine
+        meal_data['cuisine'] = cuisine.cuisine_id
         meal_data['meal_name'] = meal_name
         meal_data['price'] = price
         meal_data['category'] = category
+        meal_data['meal_pic'] = meal_pic
+        print(meal_data)
         serializer = MealPostSerializer(data = meal_data)
         if serializer.is_valid():
-            meal =  MealModel.objects.create(cuisine = cuisine, meal_name = meal_name, price = price, category = category)
+            meal =  MealModel.objects.create(cuisine = cuisine, meal_name = meal_name, price = price, category = category, meal_pic = meal_pic)
             serialized_response = MealGetSerializer(meal, many = False)
             return JsonResponse(serialized_response.data, status = status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
@@ -81,22 +109,6 @@ class MealView(APIView):
 #Location View Detail
 class LocationDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        data = request.data
-        address = data.get('address')
-        latitude = data.get('latitude')
-        longitude = data.get('longitude')
-        location_detail = {}
-        location_detail['address'] = address
-        location_detail['latitude'] = latitude
-        location_detail['longitude'] = longitude
-        serializer = LocationDetailPostSerializer(data = location_detail, many = False)
-        if serializer.is_valid():
-            location_detail = LocationDetail.objects.create(address = address, latitude = latitude, longitude = longitude)
-            serialized_location_detail = LocationDetailGetSerializer(location_detail, many = False)
-            return JsonResponse(serialized_location_detail.data, status = status.HTTP_201_CREATED)
-        return JsonResponse(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
     
     def get(self, request):
         location_detail = LocationDetail.objects.all()

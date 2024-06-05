@@ -9,21 +9,16 @@ class Cuisine(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     name = models.CharField(max_length = 70, unique = True)
     description = models.CharField(max_length = 400)
+    location = models.CharField(max_length=100, default='')
     contact = models.CharField(max_length = 500)
     address = models.CharField(max_length = 100)
     website = models.CharField(max_length = 100)
     time_open = models.CharField(max_length = 100)
+    cuisine_pic = models.FileField(upload_to='cuisines/', blank=True, null=True)
+
 
     def __str__(self):
         return self.name
-
-#pictures oof cuisines
-class CuisinePictures(models.Model):
-    cuisine = models.ForeignKey(Cuisine, related_name='pictures', on_delete=models.CASCADE)
-    cuisine_picture = models.FileField(upload_to = 'cuisines/')
-
-    def __str__(self):
-        return self.cuisine
 
 # user reviews of cuisines and model
 class Reviews(models.Model):
@@ -59,8 +54,10 @@ class MealModel(models.Model):
     meal_id = models.AutoField(unique = True, primary_key = True)
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
     meal_name = models.CharField(max_length = 50, unique = True)
-    price = models.IntegerField()
+    price = models.FloatField()
     category = models.CharField(max_length = 50)
+    meal_pic = models.FileField(upload_to='meals/', blank=True, null=True)
+
 
     def __str__(self):
         return self.meal_name + ' was added in ' + self.cuisine.name + ' menu'
@@ -68,23 +65,11 @@ class MealModel(models.Model):
 #location oof a cuisine
 class LocationDetail(models.Model):
     location_id = models.AutoField(unique = True, primary_key=True)
+    cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
     address = models.CharField(max_length = 100)
     latitude = models.CharField(max_length = 50)
     longitude = models.CharField(max_length = 50)
 
-
-# #community forum
-# class  CommunityForumModel(models.Model):
-#     communityforum_id = models.AutoField(unique=True, primary_key=True)
-#     title = models.CharField(max_length = 100)
-#     description = models.CharField(max_length=300)
-#     members = models.ManyToManyField(User, blank=True)
-
-#     def __str__(self):
-#         return f"This is {self.title}"
-
-
-#Reservations
 
 class ReservationModel(models.Model):
     reservation_id = models.AutoField(unique=True, primary_key=True)
