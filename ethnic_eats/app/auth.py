@@ -84,33 +84,6 @@ class LogoutView(APIView):
             return JsonResponse({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return JsonResponse({"error": "Bad Request"}, status=status.HTTP_400_BAD_REQUEST)
-        
-class ChangePasswordView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        user = request.user
-        if User.objects.filter(id = user.id).exists():
-            data = request.data
-            email = user.email
-            old_password = data.get('old_password')
-            new_password = data.get('new_password')
-            if not user.check_password(old_password):
-                return JsonResponse({"error": "Incorrect old password"}, status=status.HTTP_400_BAD_REQUEST)
-            if old_password == new_password:
-                return JsonResponse({"error": "New Password can't be the same as old password"}, status=status.HTTP_400_BAD_REQUEST)
-            change_password_data = {}
-            change_password_data['email'] = email
-            change_password_data['old_password'] = old_password
-            change_password_data['new_password'] = new_password
-            serialized_data = ChangePassWordSerializer(data = change_password_data)
-            if serialized_data.is_valid():
-                user.set_password(new_password)
-                user.save()
-                return JsonResponse({"message": "Password changed successfully"}, status = status.HTTP_200_OK)
-            return JsonResponse(serialized_data.errors, status = status.HTTP_400_BAD_REQUEST)
-        return JsonResponse({"message": "Unauthorized Request"}, status = status.HTTP_401_UNAUTHORIZED)
-
 
 class UserInfoView(APIView):
     permission_classes = [permissions.IsAuthenticated]

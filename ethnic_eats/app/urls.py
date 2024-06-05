@@ -13,7 +13,6 @@ urlpatterns = [
     path('auth/register/', auth.Register.as_view(), name='register'),
     path('auth/login/', auth.LoginView.as_view(), name='login'),
     path('auth/logout/', auth.LogoutView.as_view(), name='logout'),
-    path('auth/changepassword/', auth.ChangePasswordView.as_view(), name='changepassword'),
     path('auth/user/', auth.UserInfoView.as_view(), name= 'userinfo'),
     # path('users/', views.UserViewSet.as_view(), name='users'),
     # path('groups/', views.GroupViewSet.as_view(), name='groups'),
@@ -33,6 +32,7 @@ urlpatterns = [
     path("", views.greetings, name='gretings'),
     path('talk_to_us/', inquiries.InquiryView.as_view(), name = "talk to us"),
     path('reset-request/', resetpassword.PasswordResetRequestView.as_view(), name='reset_request'),
+    path('reset-password/<str:uidb64>/<str:token>/', resetpassword.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 
     #Comunity forums
     # path("forums/all", forums.AllCommunityForums.as_view(), name="all forums")
