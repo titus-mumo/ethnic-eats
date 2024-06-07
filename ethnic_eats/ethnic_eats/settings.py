@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'chatrooms',
-    'search',
+    # 'search',
 ]
 
 MIDDLEWARE = [
