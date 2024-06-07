@@ -162,7 +162,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [('34.16.129.197', 6379, 'ethnic-eats.onrender.com')],
         },
     },
 }
