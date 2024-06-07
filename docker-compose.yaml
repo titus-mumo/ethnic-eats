@@ -1,15 +1,10 @@
-version: '3.8'
+version: '3'
 
 services:
   web:
     build: .
-    command: daphne -b 0.0.0.0 -p 8000 ethnic_eats.asgi:application
+    command: python ethnic_eats/manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/ethnic_eats
+      - .:/code
     ports:
       - "8000:8000"
-    environment:
-      DJANGO_SETTINGS_MODULE: ethnic_eats.settings
-
-volumes:
-  postgres_data:

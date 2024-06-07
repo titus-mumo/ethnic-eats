@@ -90,7 +90,8 @@ class CuisineGetSerializer(serializers.Serializer):
     contact = serializers.CharField(required = True)
     contact = serializers.CharField(required=True)
     website = serializers.CharField(required = True)
-    time_open = serializers.CharField(required = True)
+    time_open = serializers.TimeField(required = True)
+    time_close = serializers.TimeField(required = True)
     cuisine_pic = serializers.FileField(required = True)
 
         #post
@@ -101,7 +102,8 @@ class CuisinePostSerializer(serializers.Serializer):
     address = serializers.CharField(required = True)
     contact = serializers.CharField(required = True)
     website = serializers.CharField(required = True)
-    time_open = serializers.CharField(required = True)
+    time_open = serializers.TimeField(required = True)
+    time_close = serializers.TimeField(required = True)
     cuisine_pic = serializers.FileField(required = True)
 
 

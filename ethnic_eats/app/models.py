@@ -13,7 +13,8 @@ class Cuisine(models.Model):
     contact = models.CharField(max_length = 500)
     address = models.CharField(max_length = 100)
     website = models.CharField(max_length = 100)
-    time_open = models.CharField(max_length = 100)
+    time_open = models.TimeField(blank=True, null=True)
+    time_close = models.TimeField(blank=True, null=True)
     cuisine_pic = models.FileField(upload_to='cuisines/', blank=True, null=True)
 
 

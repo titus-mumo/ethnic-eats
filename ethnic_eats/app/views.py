@@ -38,9 +38,10 @@ class CuisineView(APIView):
             contact = data.get('contact')
             website = data.get('website')
             time_open = data.get('time_open')
+            time_close = data.get('time_close')
             cuisine_pic = data.get('cuisine_pic' )
 
-            location_geometry = data.get('location_geometry')
+            location_geometry = json.loads(data.get('location_geometry'))
             latitude = location_geometry['latitude']
             print(latitude)
             longitude = location_geometry['longitude']
@@ -54,6 +55,7 @@ class CuisineView(APIView):
             cuisine_data['contact'] = contact
             cuisine_data['website'] = website
             cuisine_data['time_open'] = time_open
+            cuisine_data['time_close'] = time_close
             cuisine_data['cuisine_pic'] = cuisine_pic
 
             print(cuisine_data)
@@ -61,7 +63,7 @@ class CuisineView(APIView):
             
             cuisine_serializer = CuisinePostSerializer(data = cuisine_data)
             if cuisine_serializer.is_valid():
-                cuisine = Cuisine.objects.create(user = user, name = name, description = description, location=location,  contact = contact, address = address, website = website, time_open = time_open, cuisine_pic = cuisine_pic)
+                cuisine = Cuisine.objects.create(user = user, name = name, description = description, location=location,  contact = contact, address = address, website = website, time_open = time_open, time_close = time_close, cuisine_pic = cuisine_pic)
                 location = LocationDetail.objects.create(cuisine = cuisine, address=name, latitude= latitude, longitude=longitude)
                 serialized_cuisine = CuisineGetSerializer(cuisine, many=False)
                 return JsonResponse(serialized_cuisine.data, status = status.HTTP_201_CREATED, safe = False)

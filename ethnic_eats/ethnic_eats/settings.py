@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-p)oxi^y5=#ji0gjfc@$2o_6(#$2+vo(am$p&z1%xpg@l1(jd6-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://localhost:3000/', '127.0.0.1', 'ethnic-eats.onrender.com', 'localhost', 'websocketking.com', 'https://ethnic-eats.onrender.com', 'http://127.0.0.1:10000/']
+ALLOWED_HOSTS = ['http://localhost:3000/', '127.0.0.1', 'ethnic-eats.onrender.com', 'localhost', 'websocketking.com', 'https://ethnic-eats.onrender.com', 'http://127.0.0.1:10000/', '34.16.129.197']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -48,8 +48,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
-    # 'channels',
     'chatrooms',
+    'search',
 ]
 
 MIDDLEWARE = [

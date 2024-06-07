@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-SEARCH_TERMS = 'american restaurants'
+SEARCH_TERMS = 'trending foods'
 GOOGLE_SEARCH_URL = 'https://www.google.com/search'
 
 def google_search(query):
