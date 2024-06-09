@@ -95,7 +95,6 @@ class MealView(APIView):
         meal_data['price'] = price
         meal_data['category'] = category
         meal_data['meal_pic'] = meal_pic
-        print(meal_data)
         serializer = MealPostSerializer(data = meal_data)
         if serializer.is_valid():
             meal =  MealModel.objects.create(cuisine = cuisine, meal_name = meal_name, price = price, category = category, meal_pic = meal_pic)
@@ -107,6 +106,7 @@ class MealView(APIView):
         meals = MealModel.objects.all()
         serialized_meals = MealGetSerializer(meals, many=True)
         return JsonResponse(serialized_meals.data, status=status.HTTP_200_OK, safe=False)
+    
 
 #Location View Detail
 class LocationDetailView(APIView):
@@ -176,4 +176,41 @@ class CuisineOwnerView(APIView):
         serialized_cuisines = CuisineGetSerializer(cuisines, many = True)
         return JsonResponse(data = serialized_cuisines.data, status = status.HTTP_200_OK, safe = False)
 
+
+class SpecificMealView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def put(self, request, meal_id):
+        data = request.data
+        cuisine = Cuisine.objects.filter(cuisine_id = data.get('cuisine_id')).first()
+        meal_name = data.get('meal_name')
+        price = data.get('price')
+        category = data.get('category')
+        meal_pic = data.get('meal_pic')
+        meal_data = {}
+        meal_data['cuisine'] = cuisine.cuisine_id
+        meal_data['meal_name'] = meal_name
+        meal_data['price'] = price
+        meal_data['category'] = category
+        if meal_pic is not None:
+            meal_data['meal_pic'] = meal_pic
+        #print(meal_data)
+        try:
+            meal = MealModel.objects.get(meal_id = meal_id)
+            serializer = MealPostSerializer(meal, data = meal_data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe=False)
+            return JsonResponse(serializer.errors, status.HTTP_400_BAD_REQUEST)
+        except MealModel.DoesNotExist:
+            return JsonResponse({"error": "Item not found"}, status = status.HTTP_404_NOT_FOUND)
+        
+
+    def delete(self, request, meal_id):
+        try:
+            meal = MealModel.objects.get(meal_id = meal_id)
+            meal.delete()
+            return JsonResponse({"message": "Meal deleted sucessfully"}, status = status.HTTP_200_OK, safe= False)
+        except MealModel.DoesNotExist:
+            return JsonResponse({"error": "Meal not found"}, status = status.HTTP_400_BAD_REQUEST, safe=False)
 
