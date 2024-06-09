@@ -33,6 +33,7 @@ urlpatterns = [
     path('talk_to_us/', inquiries.InquiryView.as_view(), name = "talk to us"),
     path('reset-request/', resetpassword.PasswordResetRequestView.as_view(), name='reset_request'),
     path('reset-password/<str:uidb64>/<str:token>/', resetpassword.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('meal/<int:meal_id>/', views.SpecificMealView.as_view(), name='meal view')
 
     #Comunity forums
     # path("forums/all", forums.AllCommunityForums.as_view(), name="all forums")

@@ -12,7 +12,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ethnic_eats.settings")
 django_asgi_app = get_asgi_application()
 
 from chatrooms.routing import websocket_urlpatterns
-from search.routing import websocket_urlpatterns as search_patterns
+# from search.routing import websocket_urlpatterns as search_patterns
 
 application = ProtocolTypeRouter(
     {
@@ -20,7 +20,7 @@ application = ProtocolTypeRouter(
         # Just HTTP for now. (We can add other protocols later.)
         "websocket": AuthMiddlewareStack(
             URLRouter(
-                websocket_urlpatterns + search_patterns
+                websocket_urlpatterns
             )
         ),
     }

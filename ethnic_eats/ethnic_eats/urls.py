@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("app.urls")),
     path('chatrooms/', include("chatrooms.urls")),
+    path('search/', include("searchQuery.urls")),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('token/', jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name ='token_refresh')
