@@ -49,8 +49,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'chatrooms',
+    'django_crontab',
     # 'search',
-    'searchQuery'
+    #'searchQuery'
 ]
 
 MIDDLEWARE = [
@@ -163,7 +164,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [('34.16.129.197', 6379)],
+            "hosts": [('34.16.129.197', 6379, '127.0.0.1')],
         },
     },
 }
@@ -177,3 +178,7 @@ EMAIL_HOST_PASSWORD = 'vowy qlss rdno rqry'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CRONJOBS = [
+    ('0 * * * *', 'app.gemini.update_foods'),
+]
