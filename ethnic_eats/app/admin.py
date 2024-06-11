@@ -32,3 +32,7 @@ class PostPictureAdmin(admin.ModelAdmin):
 @admin.register(models.ReservationModel)
 class ReservationModelAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.ReservationModel._meta.fields]
+
+@admin.register(models.Ratings)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in models.Ratings._meta.fields]

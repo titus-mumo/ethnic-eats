@@ -89,3 +89,14 @@ class Inquires(models.Model):
     email = models.EmailField()
     subject = models.CharField(max_length=200)
     message = models.CharField(max_length=1000)
+
+
+class Ratings(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    meal_id = models.ForeignKey(MealModel, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+
+    class Meta:
+        unique_together = ('user_id', 'meal_id')  
+
+

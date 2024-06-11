@@ -7,6 +7,7 @@ from . import auth
 from . import userpost, reviews, reservations, gemini
 from . import inquiries
 from . import resetpassword
+from . import rating
 
 
 urlpatterns = [
@@ -32,7 +33,8 @@ urlpatterns = [
     path('reset-request/', resetpassword.PasswordResetRequestView.as_view(), name='reset_request'),
     path('reset-password/<str:uidb64>/<str:token>/', resetpassword.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('meal/<int:meal_id>/', views.SpecificMealView.as_view(), name='meal view'),
-    path('gemini/trending-foods/', gemini.TrendingFoods.as_view(), name="Trending foods")
+    path('gemini/trending-foods/', gemini.TrendingFoods.as_view(), name="Trending foods"),
+    path('rated-foods/', rating.HighlyRatedFoods.as_view(), name="recommended foods")
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
