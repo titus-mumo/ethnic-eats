@@ -48,7 +48,7 @@ class ReservationViewForCuisine(APIView):
         except ReservationModel.DoesNotExist:
             return JsonResponse({"message" : "Reservations specific for this cuisine not found"})
         
-class DeleteReservationView(APIView):
+class SpecificReservationView(APIView):
         permission_classes = [permissions.IsAuthenticated]
         def delete(self, request, reservation_id):
             user = request.user
@@ -58,5 +58,23 @@ class DeleteReservationView(APIView):
                 return JsonResponse({"message": "Reservation deleted successfully."}, status=status.HTTP_200_OK)
             except ReservationModel.DoesNotExist:
                 return JsonResponse({"error": "Reservation not found."}, status=status.HTTP_404_NOT_FOUND)
-               
+        
+        def put(self, request, reservation_id):
+            user = request.user
+            data = request.data
+            data['user'] = user.id
+            try:
+                reservation = ReservationModel.objects.get(user=user, reservation_id=reservation_id)
+            except ReservationModel.DoesNotExist:
+                return JsonResponse({'error': 'Reservation not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = ReservationPostSerializer(reservation, data=data, partial=True)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse({"message": "Reservation updated successfully."}, status=status.HTTP_200_OK)
+            else:
+                return JsonResponse(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+    
+        
 

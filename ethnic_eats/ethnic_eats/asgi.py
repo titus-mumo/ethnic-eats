@@ -12,7 +12,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ethnic_eats.settings")
 django_asgi_app = get_asgi_application()
 
 from chatrooms.routing import websocket_urlpatterns
-# from search.routing import websocket_urlpatterns as search_patterns
 
 application = ProtocolTypeRouter(
     {
