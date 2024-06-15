@@ -38,7 +38,7 @@ class Register(APIView):
                 cuisine_owner_group, created = Group.objects.get_or_create(name='Cuisine Owner')
                 user.groups.add(cuisine_owner_group)
             subject = "Account creation successful"
-            message = "You have successfully crreated an acount with Ethnic Eats"
+            message = "You have successfully created an acount with Ethnic Eats"
             sender_email = "tituskennedy74@gmail.com"
             recipient_list = [user.email]
             send_mail(subject, message, sender_email, recipient_list, fail_silently=False,

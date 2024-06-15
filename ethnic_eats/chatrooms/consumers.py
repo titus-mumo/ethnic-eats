@@ -65,7 +65,6 @@ class SearchCuisineConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        print(data)
         search_query = data.get('search_query', '')
 
         # Filter cuisines based on the search query

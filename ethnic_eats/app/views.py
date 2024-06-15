@@ -30,7 +30,6 @@ class CuisineView(APIView):
         user = request.user
         if User.objects.filter(id=user.id).exists():
             data = request.data
-            print(data)
             name = data.get('name')
             description = data.get('description')
             location = data.get('location')
@@ -58,8 +57,8 @@ class CuisineView(APIView):
             cuisine_data['time_close'] = time_close
             cuisine_data['cuisine_pic'] = cuisine_pic
 
-            print(cuisine_data)
-
+            if Cuisine.objects.filter(name = name).exists():
+                return JsonResponse({"error": "A cuisine with the same name already exists"}, status = status.HTTP_400_BAD_REQUEST, safe=False)
             
             cuisine_serializer = CuisinePostSerializer(data = cuisine_data)
             if cuisine_serializer.is_valid():
@@ -95,12 +94,14 @@ class MealView(APIView):
         meal_data['price'] = price
         meal_data['category'] = category
         meal_data['meal_pic'] = meal_pic
+        if MealModel.objects.filter(meal_name = meal_name, cuisine = cuisine).exists():
+            return JsonResponse({"error": "Meal present on the menu already"}, status = status.HTTP_400_BAD_REQUEST, safe=False)
         serializer = MealPostSerializer(data = meal_data)
         if serializer.is_valid():
             meal =  MealModel.objects.create(cuisine = cuisine, meal_name = meal_name, price = price, category = category, meal_pic = meal_pic)
             serialized_response = MealGetSerializer(meal, many = False)
-            return JsonResponse(serialized_response.data, status = status.HTTP_201_CREATED)
-        return JsonResponse(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+            return JsonResponse(serialized_response.data, status = status.HTTP_201_CREATED, safe=False)
+        return JsonResponse({"error": serializer.errors }, status = status.HTTP_400_BAD_REQUEST, safe=False)
     
     def get(self, request):
         meals = MealModel.objects.all()

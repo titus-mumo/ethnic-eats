@@ -50,7 +50,6 @@ def main():
 
     for result in search_results:
         url = result['link']
-        print(f'Fetching: {url}')
         try:
             html_content = fetch_web_page(url)
             parsed_content = parse_web_page(html_content)

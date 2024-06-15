@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 class PasswordResetRequestView(APIView):
     def post(self, request):
         email = request.data.get('email')
+        base_url = request.data.get('base_url')
         if not email:
             return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -21,7 +22,7 @@ class PasswordResetRequestView(APIView):
 
         token = PasswordResetTokenGenerator().make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        reset_link = f"http://localhost:8080/reset-password/{uid}/{token}/"
+        reset_link = f"{base_url}/reset-password/{uid}/{token}/"
 
         send_mail(
             'Password Reset Request',

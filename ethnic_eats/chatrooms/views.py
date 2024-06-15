@@ -18,7 +18,6 @@ class ChatMessageListCreate(generics.ListCreateAPIView):
         return ChatMessage.objects.filter(room=room_name).order_by('-timestamp')
 
     def perform_create(self, serializer):
-        print(self)
         room_name = self.kwargs['room']
         room = ChatRoom.objects.get(room=room_name)
         serializer.save(room=room)

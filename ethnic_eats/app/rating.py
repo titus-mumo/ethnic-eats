@@ -10,7 +10,7 @@ class HighlyRatedFoods(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-
+        #TODO
         user = request.user
         user_id = user.id
         ratings_data = Ratings.objects.all()

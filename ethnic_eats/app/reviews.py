@@ -18,8 +18,6 @@ class UserReviewClass(APIView):
             'score' : classify_review(str(request.data.get('review')))
         }
 
-        print(review_data)
-
         serializer = UserReviewPostSerielizer(data=review_data)
         
         if serializer.is_valid():
@@ -38,7 +36,6 @@ class UserReviewClass(APIView):
 review_model = SentimentIntensityAnalyzer()
 
 def classify_review(review):
-    print(review)
     sentiment_scores = review_model.polarity_scores(review)
     compound_score = sentiment_scores['compound']
     return compound_score
