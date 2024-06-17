@@ -38,9 +38,9 @@ class ReservationViewForCuisine(APIView):
         try:
             cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
             if not cuisine:
-                return JsonResponse({"massage": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
+                return JsonResponse({"error": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
         except Cuisine.DoesNotExist:
-            return JsonResponse({"message": "Restaurant not found"}, status = status.HTTP_404_NOT_FOUND)
+            return JsonResponse({"error": "Restaurant not found"}, status = status.HTTP_404_NOT_FOUND)
         try:
             reservations = ReservationModel.objects.filter(cuisine = cuisine)
             serializer = ReservationGetSerializer(reservations, many = True)

@@ -1,46 +1,79 @@
 from rest_framework.views import APIView
 from rest_framework import permissions, status
-from .models import Ratings
+from .models import Ratings, MealModel
 import numpy as np
 import pandas as pd
-from sklearn.metrics.pairwise import cosine_similarity
+from django.db.models import Avg
 from rest_framework.response import Response
+from django.http import JsonResponse
+
+from rest_framework.serializers import ModelSerializer
+
+class RatingSerializer(ModelSerializer):
+    class Meta:
+        model = Ratings
+        fields = ['user_id', 'meal_id', 'rating']
+
+
+class RatingView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        print(request.data)
+        rating = request.data.get('rating')
+        print(rating)
+        meal_id = request.data.get('meal_id')
+        print(meal_id)
+        meal = MealModel.objects.get(meal_id=meal_id)
+        print(meal)
+        if not meal:
+            return JsonResponse({"error": "Meal not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        Rating = {
+            'user_id': user.id,
+            'meal_id': meal.meal_id,
+            'rating': rating
+        }
+
+        rating_serializer = RatingSerializer(data=Rating)
+
+        if rating_serializer.is_valid():
+            new_rating = Ratings.objects.create(user_id=user, meal_id=meal, rating=rating)
+            return JsonResponse(rating_serializer.data, status=status.HTTP_200_OK)
+        else:
+            return JsonResponse(rating_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class HighlyRatedFoods(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        #TODO
-        user = request.user
-        user_id = user.id
-        ratings_data = Ratings.objects.all()
+        meals_with_avg_rating = Ratings.objects.values('meal_id').annotate(avg_rating=Avg('rating'))
 
-        ratings_list = list(ratings_data.values('user_id', 'meal_id', 'rating'))
+        # Filter meals with mean rating >= 3.5
+        recommended_meals = meals_with_avg_rating.filter(avg_rating__gte=3.5)
 
-        ratings_df = pd.DataFrame(ratings_list)
-        user_item_matrix = ratings_df.pivot(index='user_id', columns='meal_id', values='rating')
+        # Prepare a response dictionary
+        recommended_meals_list = []
+        for meal_data in recommended_meals:
+            meal_id = meal_data['meal_id']
+            avg_rating = meal_data['avg_rating']
+            try:
+                meal = MealModel.objects.get(meal_id=meal_id)
+                recommended_meals_list.append({
+                    'meal_id': meal_id,
+                    'cuisine_id': meal.cuisine.cuisine_id,
+                    'meal_name': meal.meal_name,
+                    'avg_rating': avg_rating,
+                    'price': meal.price,
+                    'category':meal.category,
+                    'meal_pic': str(meal.meal_pic),
 
-        user_item_matrix.fillna(0, inplace=True)
-        user_similarity = cosine_similarity(user_item_matrix)
-        user_similarity_df = pd.DataFrame(user_similarity, index=user_item_matrix.index, columns=user_item_matrix.index)
-        sim_scores = user_similarity_df[user_id]
-        # Get similarity scores for the user
-        sim_scores = sim_scores.values.reshape(-1, 1)
-        # Multiply similarity scores by the user's ratings
-        
-        user_ratings = user_item_matrix.values
-        weighted_ratings = user_ratings.T.dot(sim_scores).flatten()
-        # Normalize the weighted ratings
-        normalized_ratings = weighted_ratings / sim_scores.sum(axis=0)
+                })
+            except MealModel.DoesNotExist:
+                continue
 
-        # Create a Series with the scores and sort by descending order
-        recommendations = pd.Series(normalized_ratings, index=user_item_matrix.columns).sort_values(ascending=False)
-
-        # Remove items the user has already rated
-        rated_items = user_item_matrix.loc[user_id][user_item_matrix.loc[user_id] > 0].index
-        recommendations = recommendations.drop(rated_items)
-        return Response(recommendations,status = status.HTTP_200_OK)
-
+        return Response(recommended_meals_list, status=status.HTTP_200_OK)
     
     
 

@@ -34,7 +34,9 @@ urlpatterns = [
     path('reset-password/<str:uidb64>/<str:token>/', resetpassword.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('meal/<int:meal_id>/', views.SpecificMealView.as_view(), name='meal view'),
     path('gemini/trending-foods/', gemini.TrendingFoods.as_view(), name="Trending foods"),
-    path('rated-foods/', rating.HighlyRatedFoods.as_view(), name="recommended foods")
+    path('rated-foods/', rating.HighlyRatedFoods.as_view(), name="recommended foods"),
+    path('rate/', rating.RatingView.as_view(), name="rate meal")
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

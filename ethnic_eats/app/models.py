@@ -96,7 +96,4 @@ class Ratings(models.Model):
     meal_id = models.ForeignKey(MealModel, on_delete=models.CASCADE)
     rating = models.IntegerField()
 
-    class Meta:
-        unique_together = ('user_id', 'meal_id')  
-
 

@@ -126,24 +126,24 @@ class CuisineBasedMenuView(APIView):
         try:
             cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
             if not cuisine:
-                return JsonResponse({"massage": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
+                return JsonResponse({"error": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
         except Cuisine.DoesNotExist:
-            return JsonResponse({"message": "Restaurant not found"}, status = status.HTTP_404_NOT_FOUND)
+            return JsonResponse({"error": "Restaurant not found"}, status = status.HTTP_404_NOT_FOUND)
         
         try:
             meals = MealModel.objects.filter(cuisine_id = cuisine)
             serializer = MealGetSerializer(meals, many = True)
             return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
         except MealModel.DoesNotExist:
-            return JsonResponse({"message" : "Meals specific for this restaurant not found"})
+            return JsonResponse({"error" : "Meals specific for this restaurant not found"})
         
     def post(self, request, cuisine_id):
         try:
             cuisine = Cuisine.objects.filter(cuisine_id = cuisine_id).first()
             if not cuisine:
-                return JsonResponse({"massage": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
+                return JsonResponse({"error": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
         except Cuisine.DoesNotExist:
-            return JsonResponse({"message": "Restaurant not found"}, status = status.HTTP_404_NOT_FOUND)
+            return JsonResponse({"error": "Restaurant not found"}, status = status.HTTP_404_NOT_FOUND)
         data = request.data
         meal_serializer = CuisineBasedMenuPostSerializer(data = data, many = False)
         if meal_serializer.is_valid():
@@ -152,7 +152,7 @@ class CuisineBasedMenuView(APIView):
                 serialized_data = MealGetSerializer(meal_info, many = False)
                 return JsonResponse(serialized_data.data, status = status.HTTP_201_CREATED)
             except Exception as e:
-                return JsonResponse({"message": "Integrity Error"}, status = status.HTTP_404_NOT_FOUND)
+                return JsonResponse({"error": "Integrity Error"}, status = status.HTTP_404_NOT_FOUND)
         return JsonResponse(meal_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
     
 
@@ -163,9 +163,9 @@ class GetSpecificCuisineView(APIView):
         try:
             cuisine = Cuisine.objects.filter(cuisine_id=cuisine_id).first()
             if not cuisine:
-                return JsonResponse({"massage": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
+                return JsonResponse({"error": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
         except Cuisine.DoesNotExist:
-            return JsonResponse({"message": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse({"error": "Restaurant not found"}, status=status.HTTP_404_NOT_FOUND)
         serialized_data = CuisineGetSerializer(cuisine)
         return JsonResponse(serialized_data.data, status = status.HTTP_200_OK, safe = False)
         
