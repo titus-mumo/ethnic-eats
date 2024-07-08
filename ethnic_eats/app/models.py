@@ -59,14 +59,13 @@ class MealModel(models.Model):
     category = models.CharField(max_length = 50)
     meal_pic = models.FileField(upload_to='meals/', blank=True, null=True)
 
-
     def __str__(self):
         return self.meal_name + ' was added in ' + self.cuisine.name + ' menu'
 
 #location oof a cuisine
 class LocationDetail(models.Model):
     location_id = models.AutoField(unique = True, primary_key=True)
-    cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
+    cuisine = models.OneToOneField(Cuisine, on_delete=models.CASCADE)
     address = models.CharField(max_length = 100)
     latitude = models.CharField(max_length = 50)
     longitude = models.CharField(max_length = 50)
@@ -96,4 +95,6 @@ class Ratings(models.Model):
     meal_id = models.ForeignKey(MealModel, on_delete=models.CASCADE)
     rating = models.IntegerField()
 
-
+class SubscribeNewLetter(models.Model):
+    id = models.AutoField(unique=True, primary_key=True)
+    email = models.EmailField(unique = True)

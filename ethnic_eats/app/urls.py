@@ -8,9 +8,11 @@ from . import userpost, reviews, reservations, gemini
 from . import inquiries
 from . import resetpassword
 from . import rating
+from . import newletter
 
 
 urlpatterns = [
+    path('subscribe/', newletter.SubscribeToNewletter.as_view(), name='subscribe'),
     path('auth/register/', auth.Register.as_view(), name='register'),
     path('auth/login/', auth.LoginView.as_view(), name='login'),
     path('auth/logout/', auth.LogoutView.as_view(), name='logout'),
@@ -35,7 +37,8 @@ urlpatterns = [
     path('meal/<int:meal_id>/', views.SpecificMealView.as_view(), name='meal view'),
     path('gemini/trending-foods/', gemini.TrendingFoods.as_view(), name="Trending foods"),
     path('rated-foods/', rating.HighlyRatedFoods.as_view(), name="recommended foods"),
-    path('rate/', rating.RatingView.as_view(), name="rate meal")
+    path('rate/', rating.RatingView.as_view(), name="rate meal"),
+    path('cuisines_location/', views.CuisineAndLocationView.as_view(), name="cuisine_location")
 
 ]
 

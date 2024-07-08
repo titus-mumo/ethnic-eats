@@ -3,8 +3,8 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets, status
-from .serializers import GroupSerializer, CuisineGetSerializer, CuisinePostSerializer, MealPostSerializer, MealGetSerializer, LocationDetailPostSerializer, LocationDetailGetSerializer, CuisineBasedMenuPostSerializer
-from .models import Cuisine, MealModel, LocationDetail
+from .serializers import GroupSerializer, CuisineGetSerializer, CuisinePostSerializer, MealPostSerializer, MealGetSerializer, LocationDetailPostSerializer, LocationDetailGetSerializer, CuisineBasedMenuPostSerializer, MealAndRatingSerializer, CuisineAndLocationDetailSerializer
+from .models import Cuisine, MealModel, LocationDetail, Ratings
 from django.http import JsonResponse
 import json
 
@@ -12,6 +12,14 @@ import json
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+
+from django.db.models import Avg
+
+from django.db.models import F, Func, FloatField
+
+from django.db import models
+
+import math
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -104,8 +112,8 @@ class MealView(APIView):
         return JsonResponse({"error": serializer.errors }, status = status.HTTP_400_BAD_REQUEST, safe=False)
     
     def get(self, request):
-        meals = MealModel.objects.all()
-        serialized_meals = MealGetSerializer(meals, many=True)
+        meals = MealModel.objects.annotate(average_rating = Avg('ratings__rating'))
+        serialized_meals = MealAndRatingSerializer(meals, many=True)
         return JsonResponse(serialized_meals.data, status=status.HTTP_200_OK, safe=False)
     
 
@@ -131,9 +139,9 @@ class CuisineBasedMenuView(APIView):
             return JsonResponse({"error": "Restaurant not found"}, status = status.HTTP_404_NOT_FOUND)
         
         try:
-            meals = MealModel.objects.filter(cuisine_id = cuisine)
-            serializer = MealGetSerializer(meals, many = True)
-            return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
+            meals = MealModel.objects.filter(cuisine_id = cuisine).annotate(average_rating = Avg('ratings__rating'))
+            serialized_meals = MealAndRatingSerializer(meals, many=True)
+            return JsonResponse(serialized_meals.data, status=status.HTTP_200_OK, safe=False)
         except MealModel.DoesNotExist:
             return JsonResponse({"error" : "Meals specific for this restaurant not found"})
         
@@ -215,3 +223,39 @@ class SpecificMealView(APIView):
         except MealModel.DoesNotExist:
             return JsonResponse({"error": "Meal not found"}, status = status.HTTP_400_BAD_REQUEST, safe=False)
 
+class CuisineAndLocationView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        latitude = float(request.query_params.get('latitude'))
+        longitude = float(request.query_params.get('longitude'))
+        nearby_cuisines = get_nearby_cuisines(latitude, longitude)
+        return JsonResponse(nearby_cuisines, status=status.HTTP_200_OK, safe=False)
+
+
+
+class Distance(Func):
+    function = 'ST_Distance_Sphere'
+    template = '%(function)s(Point(%(longitude)s, %(latitude)s), Point(%(longitude2)s, %(latitude2)s))'
+    output_field = FloatField()
+
+def calculate_distance(latitude, longitude, latitude2, longitude2):
+    radius = 6371  # Radius of the Earth in kilometers
+    lat_diff = math.radians(latitude2 - latitude)
+    lon_diff = math.radians(longitude2 - longitude)
+    a = (math.sin(lat_diff / 2) ** 2 + math.cos(math.radians(latitude)) * 
+         math.cos(math.radians(latitude2)) * math.sin(lon_diff / 2) ** 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    distance = radius * c
+    return distance
+
+def get_nearby_cuisines(latitude, longitude, radius_km=50):
+    nearby_cuisines = []
+    cuisines = Cuisine.objects.all()
+    serialized_cuisines = CuisineAndLocationDetailSerializer(cuisines, many=True)
+    for cuisine in serialized_cuisines.data:
+        distance = calculate_distance(latitude, longitude, float(cuisine['location_detail']['latitude']), float(cuisine['location_detail']['longitude']))
+        print(distance)
+        if distance <= radius_km:
+            nearby_cuisines.append(cuisine)
+    return nearby_cuisines

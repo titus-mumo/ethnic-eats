@@ -79,6 +79,8 @@ class UserReviewSerielizer(serializers.ModelSerializer):
 
 
 #Cuisine Serializer
+
+
         #get
 class CuisineGetSerializer(serializers.Serializer):
     cuisine_id = serializers.IntegerField(read_only = True)
@@ -108,6 +110,12 @@ class CuisinePostSerializer(serializers.Serializer):
 
 
 #meal serializers
+    #rating
+class MealAndRatingSerializer(serializers.ModelSerializer):
+    average_rating = serializers.FloatField()
+    class Meta:
+        model = MealModel
+        fields = ['meal_id', 'cuisine', 'meal_name', 'price', 'category', 'meal_pic', 'average_rating']
     #get
 class MealGetSerializer(serializers.ModelSerializer):
     class Meta:
@@ -153,12 +161,15 @@ class ReservationPostSerializer(serializers.ModelSerializer):
         fields = ['user', 'cuisine', 'total_seats', 'time']
 
 
-# from .models import CommunityForumModel
-# class GetForumSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CommunityForumModel
-#         fields = '__all__'
+    #cuisineandlocationdetailserializer
+class CuisineAndLocationDetailSerializer(serializers.ModelSerializer):
+    location_detail = LocationDetailPostSerializer(source='locationdetail', read_only=True)
+    
+    class Meta:
+        model = Cuisine
+        fields = ['cuisine_id', 'name', 'description', 'location', 'address', 'contact', 'website', 'time_open', 'time_close', 'cuisine_pic', 'location_detail']
 
+    
 
 
 
