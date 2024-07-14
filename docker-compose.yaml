@@ -10,10 +10,10 @@ services:
       - "8000:8000"
     env_file:
       - .env
-    environment:
-      - REDIS_HOST=redis
+  #   environment:
+  #     - REDIS_HOST=redis
   
-  redis:
-    image: redis:7
-    ports:
-      - "6379:6379"
+  # redis:
+  #   image: redis:7
+  #   ports:
+  #     - "6379:6379"
