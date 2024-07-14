@@ -49,8 +49,6 @@ class PostPicture(models.Model):
     def __str__(self):
         return self.post.post_owner + ' posted ' + self.post.post_description
 
-
-#meal model
 class MealModel(models.Model):
     meal_id = models.AutoField(unique = True, primary_key = True)
     cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
@@ -58,6 +56,20 @@ class MealModel(models.Model):
     price = models.FloatField()
     category = models.CharField(max_length = 50)
     meal_pic = models.FileField(upload_to='meals/', blank=True, null=True)
+
+    def __str__(self):
+        return self.meal_name + ' was added in ' + self.cuisine.name + ' menu'
+
+
+#meal model
+class MealModelIntense(models.Model):
+    meal_id = models.AutoField(unique = True, primary_key = True)
+    cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
+    meal_name = models.CharField(max_length = 50, unique = True)
+    price = models.FloatField()
+    category = models.CharField(max_length = 50)
+    meal_pic = models.FileField(upload_to='meals/', blank=True, null=True)
+    ingredients = models.CharField(max_length= 500)
 
     def __str__(self):
         return self.meal_name + ' was added in ' + self.cuisine.name + ' menu'
@@ -92,8 +104,11 @@ class Inquires(models.Model):
 
 class Ratings(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    meal_id = models.ForeignKey(MealModel, on_delete=models.CASCADE)
+    meal_id = models.ForeignKey(MealModelIntense, on_delete=models.CASCADE)
     rating = models.IntegerField()
+
+    def __str__(self):
+        return self.rating
 
 class SubscribeNewLetter(models.Model):
     id = models.AutoField(unique=True, primary_key=True)

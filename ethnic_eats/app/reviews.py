@@ -48,4 +48,3 @@ class GetAllReviews(APIView):
         reviews = Reviews.objects.all()
         serialised_reviews = UserReviewSerielizer(reviews, many = True)
         return JsonResponse(serialised_reviews.data, status = status.HTTP_200_OK, safe=False)
-    

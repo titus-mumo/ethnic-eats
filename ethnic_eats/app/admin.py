@@ -36,3 +36,8 @@ class ReservationModelAdmin(admin.ModelAdmin):
 @admin.register(models.Ratings)
 class RatingAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.Ratings._meta.fields]
+
+
+@admin.register(models.MealModelIntense)
+class ModelIntenseAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in models.MealModelIntense._meta.fields]

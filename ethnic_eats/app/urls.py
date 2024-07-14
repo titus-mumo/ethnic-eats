@@ -9,6 +9,7 @@ from . import inquiries
 from . import resetpassword
 from . import rating
 from . import newletter
+from . import meal_view
 
 
 urlpatterns = [
@@ -38,7 +39,9 @@ urlpatterns = [
     path('gemini/trending-foods/', gemini.TrendingFoods.as_view(), name="Trending foods"),
     path('rated-foods/', rating.HighlyRatedFoods.as_view(), name="recommended foods"),
     path('rate/', rating.RatingView.as_view(), name="rate meal"),
-    path('cuisines_location/', views.CuisineAndLocationView.as_view(), name="cuisine_location")
+    path('cuisines_location/', views.CuisineAndLocationView.as_view(), name="cuisine_location"),
+    path('recommended-cuisines-based-on-reviews/', views.RecommendedCuisinesBasedOnReviews.as_view(), name='high reviews'),
+    path('miv/', meal_view.MealIntenseView.as_view(), name = 'intense meal_view')
 
 ]
 

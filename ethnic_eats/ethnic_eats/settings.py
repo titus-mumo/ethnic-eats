@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'app.middleware.LoadDataFrameMiddleware'
 ]
 
 ROOT_URLCONF = 'ethnic_eats.urls'
@@ -174,15 +175,22 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True
 }
 
+REDIS_URL = os.getenv('REDIS_URL')
+
 ASGI_APPLICATION = "ethnic_eats.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [('34.16.129.197', 6379, '127.0.0.1')],
+            "hosts": [('redis', 6379)],
+            'capacity': 300
         },
     },
 }
+
+ASGI_THREADS = 1000
+
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -197,3 +205,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CRONJOBS = [
     ('0 * * * *', 'app.gemini.update_foods'),
 ]
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8080', 'https://lets-dine.vercel.app/']
+
