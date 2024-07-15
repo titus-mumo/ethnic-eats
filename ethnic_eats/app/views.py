@@ -275,9 +275,11 @@ class CuisineAndLocationView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+        radius = int(request.query_params.get('radius'))
+        print(radius)
         latitude = float(request.query_params.get('latitude'))
         longitude = float(request.query_params.get('longitude'))
-        nearby_cuisines = get_nearby_cuisines(latitude, longitude)
+        nearby_cuisines = get_nearby_cuisines(latitude, longitude, radius)
         return JsonResponse(nearby_cuisines, status=status.HTTP_200_OK, safe=False)
 
 
@@ -297,7 +299,8 @@ def calculate_distance(latitude, longitude, latitude2, longitude2):
     distance = radius * c
     return distance
 
-def get_nearby_cuisines(latitude, longitude, radius_km=8000):
+def get_nearby_cuisines(latitude, longitude, radius_km):
+    print(radius_km)
     nearby_cuisines = []
     cuisines = Cuisine.objects.all()
     serialized_cuisines = CuisineAndLocationDetailSerializer(cuisines, many=True)

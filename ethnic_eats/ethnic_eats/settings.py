@@ -175,14 +175,14 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True
 }
 
-REDIS_URL = os.getenv('REDIS_URL')
+# REDIS_URL = str(os.getenv('REDIS_URL'))
 
 ASGI_APPLICATION = "ethnic_eats.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [REDIS_URL],
+            "hosts": [('redis', 6379)],
             'capacity': 300
         },
     },
